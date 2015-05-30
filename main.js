@@ -30,7 +30,7 @@ function main() {
 }
 
 function update() {
-	source.tryDelete(f);
+	source.tryDelete();
 	source.moveAll();
 	source.gravityOnAll(gravity);
 	
