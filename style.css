@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+
+body {
+    background-color: grey;
+}
+
+#main {
+	border: dashed black 3px;
+}
