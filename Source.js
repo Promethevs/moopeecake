@@ -23,7 +23,7 @@ function Source(x, y) {
 		this.elems.last.val.speed.y += (Math.random()*-10)-5;
 	};
 
-	this.tryDelete = function(limit) {
+	this.tryDelete = function() {
 		var elem = this.elems.peek();
 		if (elem != undefined && elem.y >= limit + elem.radius)
 			this.elems.dequeue();
@@ -35,9 +35,9 @@ function Source(x, y) {
 		}
 	};
 
-	this.gravityOnAll = function(n) {
+	this.gravityOnAll = function() {
 		for (var elem = this.elems.first; elem != null; elem = elem.next) {
-			elem.val.gravity(n);
+			elem.val.gravity();
 		}
 	};
 

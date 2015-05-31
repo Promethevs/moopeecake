@@ -13,8 +13,8 @@ function Ball(x, y) {
 		this.y += this.speed.y;
 	};
 
-	this.gravity = function(n) {
-		this.speed.y+=n;
+	this.gravity = function() {
+		this.speed.y+=gravity;
 	};
 	
 	this.draw = function(ctx) {

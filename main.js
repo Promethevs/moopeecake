@@ -4,10 +4,9 @@
 
 var source = new Source(400, 150);
 var gravity = 0.5;
+var limit = 300;
 var totalFrame = 0;
 var frame = 20;
-var speedint = 0;
-var speedtest = [ 0, -10, -3, -5, -7, 0, -3, 0, 0, 0, 3, 0, 7, 0, 3, -5 ];
 
 function init() {
 	
@@ -32,9 +31,9 @@ function main() {
 function update() {
 	source.tryDelete();
 	source.moveAll();
-	source.gravityOnAll(gravity);
+	source.gravityOnAll();
 	
-	if (frame >= 33) {
+	if (frame >= 11) {
 		frame = 0;
 		//source.spawnNew();
 		source.spawnRand();
