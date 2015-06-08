@@ -8,24 +8,40 @@ var limit = 300;
 var totalFrame = 0;
 var frame = 20;
 
+var lines = [];
+
 function init() {
 	
 	var canvas = document.getElementById("main");
 	if (canvas.getContext) {
 
 		window.requestAnimationFrame(main);
-
+		
 	} else
 		$(document).append("<p>looks like something went wrong in js:(</p>");
 }
 
 function main() {
+	var canvas = document.getElementById("main");
 	var ctx = document.getElementById("main").getContext("2d");
 
 	update();
 	draw(ctx);
+	drawAllLines(ctx);
 
 	window.requestAnimationFrame(main);
+	
+	canvas.onmousedown = function() {		
+		l = new Line();
+		l.startDrawingCoords();
+	};
+	
+	canvas.onmouseup = function() {
+		l.endDrawingCoords();
+		l.draw(ctx);
+		lines.push(l);
+	};
+	
 }
 
 function update() {
@@ -46,6 +62,7 @@ function update() {
 function draw(ctx) {
 
 	ctx.fillStyle = "white";
+	
 	ctx.fillRect(0, 0, 800, 450);
 	
 	ctx.fillStyle = "black";
@@ -56,3 +73,10 @@ function draw(ctx) {
 	source.draw(ctx);
 	source.drawAll(ctx);
 }
+
+function drawAllLines(ctx) {
+	for (var i=0; i<lines.length; i++) {
+		lines[i].draw(ctx);
+	};
+}
+
