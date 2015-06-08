@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+    <head>
+        <title>pathExample</title>
+        <meta charset='utf-8' />
+
+	<script>
+
+		function drawLine(e)
+		{
+
+		e = window.event;
+			//alert("rfrf");
+			
+            		ctx.beginPath();
+			
+			ctx.moveTo(e.clientX, e.clientY);
+			
+		}
+
+		function endDrawLine(e)
+		{
+			e = window.event;
+			ctx.lineTo(e.clientX, e.clientY);
+            		ctx.stroke();
+			cts.closePath();
+		}
+	</script>
+    </head>
+    <body>
+        <canvas id='example' onmousedown="drawLine();" onmouseup="endDrawLine();">Обновите браузер</canvas>
+        <script>
+		var example = document.getElementById("example"),
+                ctx     = example.getContext('2d');
+		example.height = 800;
+            	example.width  = 1000;
+	</script>
+    </body>
+</html>

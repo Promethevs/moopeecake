@@ -4,6 +4,8 @@
 
 var sources = [];
 var lines = [];
+var l;
+
 
 var gravity = 0.2;
 var limit = 450;
@@ -16,6 +18,16 @@ var ctx;
 function init() {
 	canvas = document.getElementById("main");
 	canvas.ondblclick = newSource;
+	canvas.onmousedown = function(e) {		
+		l = new Line();
+		l.startDrawingCoords(e.pageX, e.pageY);
+	};
+	canvas.onmouseup = function(e) {
+		l.endDrawingCoords(e.pageX, e.pageY);
+		l.draw(ctx);
+		lines.push(l);
+	};
+	
 	
 	if ((ctx = canvas.getContext("2d")) != null)
 		window.requestAnimationFrame(main);
@@ -30,6 +42,8 @@ function main() {
 	draw();
 
 	window.requestAnimationFrame(main);
+	
+	
 }
 
 
@@ -43,8 +57,8 @@ function update() {
 	if (frame >= 33) {
 		frame = 0;
 		for (var i = 0; i < sources.length; i++)
-			//sources[i].spawnNew();
-			sources[i].spawnRand();
+			sources[i].spawnNew();
+			//sources[i].spawnRand();
 
 	}
 
@@ -66,6 +80,13 @@ function draw() {
 		sources[i].draw();
 		sources[i].drawAll();
 	}
+	drawAllLines(ctx);
+}
+
+function drawAllLines(ctx) {
+	for (var i=0; i<lines.length; i++) {
+		lines[i].draw(ctx);
+	};
 }
 
 function newSource(e) {

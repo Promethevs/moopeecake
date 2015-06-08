@@ -52,5 +52,5 @@ function Source(x, y) {
 		for (var elem = this.elems.first; elem != null || elem != undefined; elem = elem.next) {
 			elem.val.draw();
 		}
-	};
+	};	
 }
