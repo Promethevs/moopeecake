@@ -23,7 +23,7 @@ function Source(x, y) {
 		this.elems.last.val.speed.y += (Math.random()*-10)-5;
 	};
 
-	this.tryDelete = function() {
+	this.moveOffScreen = function() {
 		var elem = this.elems.peek();
 		if (elem != undefined && elem.y >= limit + elem.radius)
 			this.elems.dequeue();
@@ -41,16 +41,16 @@ function Source(x, y) {
 		}
 	};
 
-	this.draw = function(ctx) {
+	this.draw = function() {
 		ctx.beginPath();
 		ctx.arc(this.x, this.y, 12, 0, Math.PI * 2, true);
 		ctx.closePath();
 		ctx.strokeStyle = "black";
 		ctx.stroke();
 	};
-	this.drawAll = function(ctx) {
+	this.drawAll = function() {
 		for (var elem = this.elems.first; elem != null || elem != undefined; elem = elem.next) {
-			elem.val.draw(ctx);
+			elem.val.draw();
 		}
 	};
 }

@@ -9,11 +9,7 @@ function Queue() {
 	this.last = null;
 
 	this.empty = function() {
-		return length == 0;
-	};
-
-	this.length = function() {
-		return length;
+		return this.length === 0;
 	};
 
 	this.enqueue = function(value) {
@@ -31,7 +27,7 @@ function Queue() {
 			this.last = temp;
 		}
 
-		++length;
+		++this.length;
 	};
 
 	this.dequeue = function() {
@@ -46,7 +42,7 @@ function Queue() {
 			this.first.next.prev = null;
 			this.first = this.first.next;
 		}
-		--length;
+		--this.length;
 	};
 
 	this.peek = function() {
@@ -64,18 +60,26 @@ function Node(value) {
 }
 
 var testQueue = function() {
-	var q = new Queue();
-	var out = "";
+	var q1 = new Queue();
+	var q2 = new Queue();
+	var out1 = "";
+	var out2 = "";
 
 	for (var i = 1; i <= 10; i++) {
-		q.enqueue(i);
-		out += " " + i
+		q1.enqueue(i);
+		q2.enqueue(i);
+		out1 += " " + i
+		out2 += " " + i
 	}
-	console.log(out);
+	console.log(out1);
+	console.log(out2);
 
-	while (!q.empty()) {
-		console.log(q.peek());
-		q.dequeue(i);
-		console.log(q.peek());
+	while (!q1.empty()) {
+		console.log(q1.peek());
+		console.log(q2.peek());
+		q1.dequeue(i);
+		q2.dequeue(i);
+		console.log(q1.peek());
+		console.log(q2.peek());
 	}
 }

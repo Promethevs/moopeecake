@@ -2,57 +2,73 @@
  * 
  */
 
-var source = new Source(400, 150);
-var gravity = 0.5;
-var limit = 300;
+var sources = [];
+var lines = [];
+
+var gravity = 0.2;
+var limit = 450;
 var totalFrame = 0;
 var frame = 20;
 
+var canvas;
+var ctx;
+
 function init() {
+	canvas = document.getElementById("main");
+	canvas.ondblclick = newSource;
 	
-	var canvas = document.getElementById("main");
-	if (canvas.getContext) {
-
+	if ((ctx = canvas.getContext("2d")) != null)
 		window.requestAnimationFrame(main);
-
-	} else
+	else
 		$(document).append("<p>looks like something went wrong in js:(</p>");
+	
 }
 
 function main() {
-	var ctx = document.getElementById("main").getContext("2d");
 
 	update();
-	draw(ctx);
+	draw();
 
 	window.requestAnimationFrame(main);
 }
 
+
 function update() {
-	source.tryDelete();
-	source.moveAll();
-	source.gravityOnAll();
-	
-	if (frame >= 11) {
+	for (var i = 0; i < sources.length; i++) {
+		sources[i].moveOffScreen();
+		sources[i].moveAll();
+		sources[i].gravityOnAll();
+	}
+
+	if (frame >= 33) {
 		frame = 0;
-		//source.spawnNew();
-		source.spawnRand();
+		for (var i = 0; i < sources.length; i++)
+			//sources[i].spawnNew();
+			sources[i].spawnRand();
+
 	}
 
 	++totalFrame;
 	++frame;
 }
 
-function draw(ctx) {
+function draw() {
 
 	ctx.fillStyle = "white";
 	ctx.fillRect(0, 0, 800, 450);
-	
+
 	ctx.fillStyle = "black";
 	ctx.font = "14px serif";
 	ctx.fillText(totalFrame, 10, 15);
 	ctx.fillText(frame, 10, 30);
+	
+	for (var i = 0; i < sources.length; i++) {
+		sources[i].draw();
+		sources[i].drawAll();
+	}
+}
 
-	source.draw(ctx);
-	source.drawAll(ctx);
+function newSource(e) {
+	//console.log(e.pageX + "; " + e.pageY);
+	sources.push(new Source(e.pageX - 12, e.pageY - 12));
 }
