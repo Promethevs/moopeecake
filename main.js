@@ -68,7 +68,7 @@ function update() {
 
 function draw() {
 
-	ctx.fillStyle = "white";
+	ctx.fillStyle = getRandomColor();
 	ctx.fillRect(0, 0, 800, 450);
 
 	ctx.fillStyle = "black";
@@ -92,4 +92,13 @@ function drawAllLines(ctx) {
 function newSource(e) {
 	//console.log(e.pageX + "; " + e.pageY);
 	sources.push(new Source(e.pageX - 12, e.pageY - 12));
+}
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF'.split('');
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }

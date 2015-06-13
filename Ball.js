@@ -24,7 +24,7 @@ function Ball(x, y) {
 		ctx.beginPath();
 		ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
 	    ctx.closePath();
-	    ctx.fillStyle = "black";
+	    ctx.fillStyle = getRandomColor();
 	    ctx.fill();
 	    ctx.font = "18px serif";
 		ctx.fillText(this.id, this.x + this.radius, this.y - this.radius);
