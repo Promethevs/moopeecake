@@ -7,6 +7,7 @@ var freeId = 0;
 function Ball(x, y) {
 	this.x = x;
 	this.y = y;
+	this.color = getRandomColor();
 	this.radius = 10;
 	this.speed = {x:0, y:0};
 	this.id = freeId++;
@@ -24,7 +25,7 @@ function Ball(x, y) {
 		ctx.beginPath();
 		ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
 	    ctx.closePath();
-	    ctx.fillStyle = getRandomColor();
+	    ctx.fillStyle = this.color;
 	    ctx.fill();
 	    ctx.font = "18px serif";
 		ctx.fillText(this.id, this.x + this.radius, this.y - this.radius);

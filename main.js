@@ -68,7 +68,7 @@ function update() {
 
 function draw() {
 
-	ctx.fillStyle = getRandomColor();
+	ctx.fillStyle = "white";
 	ctx.fillRect(0, 0, 800, 450);
 
 	ctx.fillStyle = "black";
