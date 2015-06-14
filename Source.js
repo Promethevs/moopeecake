@@ -4,6 +4,7 @@
 
 /**
  * Source constructor
+ * 
  * @param Number
  *            x - x coordinate
  * @param Number
@@ -35,12 +36,12 @@ function Source(x, y) {
 	 */
 	this.spawnRand = function() {
 		this.spawnNew();
-		this.elems.last.val.speed.x += (Math.random()*10)-5;
-		this.elems.last.val.speed.y += (Math.random()*-10)-5;
+		this.elems.last.val.speed.x += (Math.random() * 10) - 5;
+		this.elems.last.val.speed.y += (Math.random() * -10) - 5;
 	};
 
 	/**
-	 * deletes the first ball if it has moved off screen 
+	 * deletes the first ball if it has moved off screen
 	 */
 	this.moveOffScreen = function() {
 		var elem = this.elems.peek();
@@ -53,6 +54,11 @@ function Source(x, y) {
 	 */
 	this.moveAll = function() {
 		for (var elem = this.elems.first; elem != null; elem = elem.next) {
+			for (var i = 0; i < lines.length; i++)
+				if (elem.val.collidedBrute(lines[i])) {
+					elem.val.speed.x += (Math.random() * 10) - 5;
+					elem.val.speed.y += (Math.random() * -10) - 5;
+				}
 			elem.val.move();
 		}
 	};
@@ -76,7 +82,7 @@ function Source(x, y) {
 		ctx.strokeStyle = "black";
 		ctx.stroke();
 	};
-	
+
 	/**
 	 * draw all balls ejected from the source
 	 */
@@ -84,5 +90,5 @@ function Source(x, y) {
 		for (var elem = this.elems.first; elem != null || elem != undefined; elem = elem.next) {
 			elem.val.draw();
 		}
-	};	
+	};
 }
