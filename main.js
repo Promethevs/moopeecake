@@ -1,20 +1,49 @@
 /**
- * 
+ * Root of the program
  */
 
+/**
+ * array of all sources.
+ */
 var sources = [];
+/**
+ * array of all lines.
+ */
 var lines = [];
+/**
+ * variable containing unfinished line.
+ */
 var l;
 
-
+/**
+ * gravity of all the balls;
+ */
 var gravity = 0.2;
+/**
+ * Y coordinate at which a ball will be destroyed.
+ */
 var limit = 450;
+/**
+ * number of frames that have passed since start
+ */
 var totalFrame = 0;
+/**
+ * counter for frames
+ */
 var frame = 20;
 
+/**
+ * variable containing HTML canvas element
+ */
 var canvas;
+/**
+ * 2D context of canvas
+ */
 var ctx;
 
+/**
+ * initializes global variables & functions, starts the animation
+ */
 function init() {
 	canvas = document.getElementById("main");
 	canvas.ondblclick = newSource;
@@ -36,6 +65,13 @@ function init() {
 	
 }
 
+/**
+ * main loop of the program:
+ * <ul>
+ * <li>updates all elements</li>
+ * <li>draws all elements</li>
+ * </ul>
+ */
 function main() {
 
 	update();
@@ -46,7 +82,15 @@ function main() {
 	
 }
 
-
+/**
+ * updates all elements:
+ * <ol>
+ * <li>checks if projectiles moved off screen</li>
+ * <li>moves all projectiles to their next position</li>
+ * <li>applies gravity on all projectiles</li>
+ * <li>spawns new projectiles</li>
+ * </ol>
+ */
 function update() {
 	for (var i = 0; i < sources.length; i++) {
 		sources[i].moveOffScreen();
@@ -66,34 +110,46 @@ function update() {
 	++frame;
 }
 
+/**
+ * draws all elements:
+ * <ol>
+ * <li>draws all Sources</li>
+ * <li>draws all projectiles</li>
+ * <li>draws all lines</li>
+ * </ol>
+ */
 function draw() {
 
 	ctx.fillStyle = "white";
 	ctx.fillRect(0, 0, 800, 450);
 
-	ctx.fillStyle = "black";
-	ctx.font = "14px serif";
-	ctx.fillText(totalFrame, 10, 15);
-	ctx.fillText(frame, 10, 30);
+	//ctx.fillStyle = "black";
+	//ctx.font = "14px serif";
+	//ctx.fillText(totalFrame, 10, 15);
+	//ctx.fillText(frame, 10, 30);
 	
 	for (var i = 0; i < sources.length; i++) {
 		sources[i].draw();
-		sources[i].drawAll();
+		sources[i].drawAllBalls();
 	}
-	drawAllLines(ctx);
-}
-
-function drawAllLines(ctx) {
 	for (var i=0; i<lines.length; i++) {
-		lines[i].draw(ctx);
+		lines[i].draw();
 	};
 }
 
+/**
+ * makes new Source
+ * @param e - double click event
+ */
 function newSource(e) {
 	//console.log(e.pageX + "; " + e.pageY);
 	sources.push(new Source(e.pageX - 12, e.pageY - 12));
 }
 
+/**
+ * generates random color
+ * @returns {String} a random color
+ */
 function getRandomColor() {
     var letters = '0123456789ABCDEF'.split('');
     var color = '#';

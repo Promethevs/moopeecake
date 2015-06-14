@@ -1,7 +1,10 @@
 /**
- * 
+ * Implementation of a linked queue
  */
 
+/**
+ * Queue constructor
+ */
 function Queue() {
 
 	this.length = 0;
