@@ -71,7 +71,7 @@ function Source(x, y) {
 	 */
 	this.draw = function() {
 		ctx.beginPath();
-		ctx.arc(this.x, this.y, 12, 0, Math.PI * 2, true);
+		ctx.arc(this.x, this.y, 8, 0, Math.PI * 2, true);
 		ctx.closePath();
 		ctx.strokeStyle = "black";
 		ctx.stroke();

@@ -21,7 +21,7 @@ function Ball(x, y) {
 	/**
 	 * radius of the Ball
 	 */
-	this.radius = 10;
+	this.radius = 6;
 	/**
 	 * speed vector
 	 */
@@ -51,7 +51,5 @@ function Ball(x, y) {
 	    ctx.closePath();
 	    ctx.fillStyle = this.color;
 	    ctx.fill();
-	    ctx.font = "18px serif";
-		ctx.fillText(this.id, this.x + this.radius, this.y - this.radius);
 	};
 }
