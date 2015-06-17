@@ -2,7 +2,6 @@
  * Line object
  */
 
-
 /**
  * Default line contructor
  */
@@ -97,10 +96,10 @@ function Line(x_start, y_start, x_end, y_end) {
 	this.draw = function() {
 		// console.log("Drawing begin");
 
-		 console.log("x0: "+this.getXStart());
-		 console.log("y0: "+this.getYStart());
-		 console.log("x1: "+this.getXEnd());
-		 console.log("y1: "+this.getYEnd());
+		// console.log("x0: "+this.getXStart());
+		// console.log("y0: "+this.getYStart());
+		// console.log("x1: "+this.getXEnd());
+		// console.log("y1: "+this.getYEnd());
 
 		ctx.beginPath();
 		ctx.moveTo(this.getXStart(), this.getYStart());

@@ -73,13 +73,23 @@ function Ball(x, y) {
 
 	this.reflect = function(line) {
 
-		var x = this.speed.x;
-		var y = this.speed.y;
-		var cosa = cos(line, x, y);
+		var xEnd = this.x;
+		var yEnd = this.y;
 
-		this.speed.x = distancePoints(x , y) * cosa;
-		var sin = Math.sqrt(1 - cosa * cosa);
-		this.speed.y = distancePoints(x, y) * sin;
+		var xStart = this.x - this.speed.x;
+		var yStart = this.y - this.speed.y;
+		
+		var vect = new Line(xStart, yStart, xEnd, yEnd);
+		
+		var cosa = cos(line, vect);
+
+		this.speed.x = distanceLine(vect) * cosa;
+		var sina = Math.sqrt(1 - cosa * cosa);
+		if(this.speed.y>0)
+			this.speed.y = -1 * distanceLine(vect) * sina;
+		else
+			this.speed.y = distanceLine(vect) * sina;
+			
 	}
 
 	/**

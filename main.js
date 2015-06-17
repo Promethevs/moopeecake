@@ -166,23 +166,22 @@ function distanceLine(l) {
 	return distanceCoords(l.getXEnd(), l.getYEnd(), l.getXStart(), l.getYStart());
 }
 
-function distancePoints(x, y) {
-	return Math.sqrt(x*x + y*y);
-}
-
 function distanceCoords(x1, y1, x2, y2) {
-	return Math.sqrt((x1 - x2) * (x1 - x2) - (y1 - y2) * (y1 - y2));
+	return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 }
 
-function dot(l, x, y) {
+function dot(l1, l2) {
 	
-	var x1 = l.getXEnd() - l.getXStart();
-	var y1 = l.getYEnd() - l.getYStart();
+	var x1 = l1.getXEnd() - l1.getXStart();
+	var y1 = l1.getYEnd() - l1.getYStart();
+	
+	var x2 = l2.getXEnd() - l2.getXStart();
+	var y2 = l2.getYEnd() - l2.getYStart();
 
-	var res = x1 * x + y1 * y; 
+	var res = x1 * x2 + y1 * y2;
 	return res;
 }
 
-function cos(l, x, y) {
-	return dot(l, x,y) / (distanceLine(l) * distancePoints(x, y));
+function cos(l1, l2) {
+	return dot(l1, l2) / (distanceLine(l1) * distanceLine(l2));
 }
