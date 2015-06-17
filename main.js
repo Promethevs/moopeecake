@@ -18,7 +18,7 @@ var l;
 /**
  * gravity of all the balls;
  */
-var gravity = 0.2;
+var gravity = 0.02;
 /**
  * Y coordinate at which a ball will be destroyed.
  */
@@ -31,7 +31,10 @@ var totalFrame = 0;
  * counter for frames
  */
 var frame = 20;
-
+/**
+ * counter for updates
+ */
+var updates = 0;
 /**
  * variable containing HTML canvas element
  */
@@ -58,7 +61,7 @@ function init() {
 	};
 
 	if ((ctx = canvas.getContext("2d")) != null)
-		window.requestAnimationFrame(main);
+		setInterval(main, 2);
 	else
 		$(document).append("<p>looks like something went wrong in js:(</p>");
 
@@ -74,10 +77,11 @@ function init() {
 function main() {
 
 	update();
-	draw();
-
-	window.requestAnimationFrame(main);
-
+	if (updates >= 7) {
+		updates = 0;
+		draw();
+	}
+	++updates;
 }
 
 /**
@@ -90,21 +94,21 @@ function main() {
  * </ol>
  */
 function update() {
+
 	for (var i = 0; i < sources.length; i++) {
 		sources[i].moveOffScreen();
 		sources[i].moveAll();
 		sources[i].gravityOnAll();
 	}
 
-	if (frame >= 33) {
+	if (frame >= 200) {
 		frame = 0;
 		for (var i = 0; i < sources.length; i++)
 			sources[i].spawnNew();
 		// sources[i].spawnRand();
 
 	}
-
-	++totalFrame;
+	//++totalFrame;
 	++frame;
 }
 
@@ -133,7 +137,6 @@ function draw() {
 	for (var i = 0; i < lines.length; i++) {
 		lines[i].draw();
 	}
-	;
 }
 
 /**
@@ -161,9 +164,9 @@ function getRandomColor() {
 	return color;
 }
 
-
 function distanceLine(l) {
-	return distanceCoords(l.getXEnd(), l.getYEnd(), l.getXStart(), l.getYStart());
+	return distanceCoords(l.getXEnd(), l.getYEnd(), l.getXStart(), l
+			.getYStart());
 }
 
 function distanceCoords(x1, y1, x2, y2) {
@@ -171,10 +174,10 @@ function distanceCoords(x1, y1, x2, y2) {
 }
 
 function dot(l1, l2) {
-	
+
 	var x1 = l1.getXEnd() - l1.getXStart();
 	var y1 = l1.getYEnd() - l1.getYStart();
-	
+
 	var x2 = l2.getXEnd() - l2.getXStart();
 	var y2 = l2.getYEnd() - l2.getYStart();
 

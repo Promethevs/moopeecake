@@ -71,6 +71,17 @@ function Ball(x, y) {
 
 	};
 
+	this.collidedBruteNotWorking = function(line) {
+
+		var x1 = line.getXStart();
+		var y1 = line.getYStart();
+
+		var x2 = line.getXEnd();
+		var y2 = line.getYEnd();
+
+		return Math.abs((this.x - x1) / (x2 - x1) - (this.y - y1) / (y2 - y1)) == 0;
+	}
+
 	this.reflect = function(line) {
 
 		var xEnd = this.x;
@@ -78,18 +89,18 @@ function Ball(x, y) {
 
 		var xStart = this.x - this.speed.x;
 		var yStart = this.y - this.speed.y;
-		
+
 		var vect = new Line(xStart, yStart, xEnd, yEnd);
-		
+
 		var cosa = cos(line, vect);
 
 		this.speed.x = distanceLine(vect) * cosa;
 		var sina = Math.sqrt(1 - cosa * cosa);
-		if(this.speed.y>0)
+		if (this.speed.y > 0)
 			this.speed.y = -1 * distanceLine(vect) * sina;
 		else
 			this.speed.y = distanceLine(vect) * sina;
-			
+
 	}
 
 	/**
