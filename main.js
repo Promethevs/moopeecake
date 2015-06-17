@@ -47,7 +47,7 @@ var ctx;
 function init() {
 	canvas = document.getElementById("main");
 	canvas.ondblclick = newSource;
-	canvas.onmousedown = function(e) {		
+	canvas.onmousedown = function(e) {
 		l = new Line();
 		l.startDrawingCoords(e.pageX, e.pageY);
 	};
@@ -56,13 +56,12 @@ function init() {
 		l.draw(ctx);
 		lines.push(l);
 	};
-	
-	
+
 	if ((ctx = canvas.getContext("2d")) != null)
 		window.requestAnimationFrame(main);
 	else
 		$(document).append("<p>looks like something went wrong in js:(</p>");
-	
+
 }
 
 /**
@@ -78,8 +77,7 @@ function main() {
 	draw();
 
 	window.requestAnimationFrame(main);
-	
-	
+
 }
 
 /**
@@ -102,7 +100,7 @@ function update() {
 		frame = 0;
 		for (var i = 0; i < sources.length; i++)
 			sources[i].spawnNew();
-			//sources[i].spawnRand();
+		// sources[i].spawnRand();
 
 	}
 
@@ -123,38 +121,68 @@ function draw() {
 	ctx.fillStyle = "white";
 	ctx.fillRect(0, 0, 800, 450);
 
-	//ctx.fillStyle = "black";
-	//ctx.font = "14px serif";
-	//ctx.fillText(totalFrame, 10, 15);
-	//ctx.fillText(frame, 10, 30);
-	
+	// ctx.fillStyle = "black";
+	// ctx.font = "14px serif";
+	// ctx.fillText(totalFrame, 10, 15);
+	// ctx.fillText(frame, 10, 30);
+
 	for (var i = 0; i < sources.length; i++) {
 		sources[i].draw();
 		sources[i].drawAllBalls();
 	}
-	for (var i=0; i<lines.length; i++) {
+	for (var i = 0; i < lines.length; i++) {
 		lines[i].draw();
-	};
+	}
+	;
 }
 
 /**
  * makes new Source
- * @param e - double click event
+ * 
+ * @param e -
+ *            double click event
  */
 function newSource(e) {
-	//console.log(e.pageX + "; " + e.pageY);
+	// console.log(e.pageX + "; " + e.pageY);
 	sources.push(new Source(e.pageX - 12, e.pageY - 12));
 }
 
 /**
  * generates random color
+ * 
  * @returns {String} a random color
  */
 function getRandomColor() {
-    var letters = '0123456789ABCDEF'.split('');
-    var color = '#';
-    for (var i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+	var letters = '0123456789ABCDEF'.split('');
+	var color = '#';
+	for (var i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
+}
+
+
+function distanceLine(l) {
+	return distanceCoords(l.getXEnd(), l.getYEnd(), l.getXStart(), l.getYStart());
+}
+
+function distancePoints(x, y) {
+	return Math.sqrt(x*x + y*y);
+}
+
+function distanceCoords(x1, y1, x2, y2) {
+	return Math.sqrt((x1 - x2) * (x1 - x2) - (y1 - y2) * (y1 - y2));
+}
+
+function dot(l, x, y) {
+	
+	var x1 = l.getXEnd() - l.getXStart();
+	var y1 = l.getYEnd() - l.getYStart();
+
+	var res = x1 * x + y1 * y; 
+	return res;
+}
+
+function cos(l, x, y) {
+	return dot(l, x,y) / (distanceLine(l) * distancePoints(x, y));
 }

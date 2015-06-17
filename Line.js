@@ -2,27 +2,35 @@
  * Line object
  */
 
+
+/**
+ * Default line contructor
+ */
+function Line() {
+	return Line(0, 0, 0, 0);
+}
+
 /**
  * Line constructor
  */
-function Line() {
+function Line(x_start, y_start, x_end, y_end) {
 	/**
 	 * x coord of the start
 	 */
-	this.x_start = 0;
+	this.x_start = x_start;
 	/**
 	 * y coord of the start
 	 */
-	this.y_start = 0;
+	this.y_start = y_start;
 	/**
 	 * x coord of the end
 	 */
-	this.x_end = 0;
+	this.x_end = x_end;
 	/**
 	 * y coord of the end
 	 */
-	this.y_end = 0;
-	
+	this.y_end = y_end;
+
 	/**
 	 * getter for x_start
 	 */
@@ -50,7 +58,7 @@ function Line() {
 	this.getYEnd = function() {
 		return this.y_end;
 	};
-	
+
 	/**
 	 * setter for start x & y
 	 */
@@ -66,12 +74,12 @@ function Line() {
 		this.x_end = xe;
 		this.y_end = ye;
 	};
-	
+
 	/**
 	 * start drawing a line
 	 */
 	this.startDrawingCoords = function(x, y) {
-		//e = window.event;
+		// e = window.event;
 		this.setStartCoords(x, y);
 	};
 
@@ -79,21 +87,21 @@ function Line() {
 	 * end drawing a line
 	 */
 	this.endDrawingCoords = function(x, y) {
-		//e = window.event;
+		// e = window.event;
 		this.setEndCoords(x, y);
 	};
-	
+
 	/**
 	 * draw a line
 	 */
 	this.draw = function() {
-		//console.log("Drawing begin");
-			
-		//console.log("x0: "+this.getXStart());
-		//console.log("y0: "+this.getYStart());
-		//console.log("x1: "+this.getXEnd());
-		//console.log("y1: "+this.getYEnd());
-		
+		// console.log("Drawing begin");
+
+		 console.log("x0: "+this.getXStart());
+		 console.log("y0: "+this.getYStart());
+		 console.log("x1: "+this.getXEnd());
+		 console.log("y1: "+this.getYEnd());
+
 		ctx.beginPath();
 		ctx.moveTo(this.getXStart(), this.getYStart());
 		ctx.lineTo(this.getXEnd(), this.getYEnd());

@@ -54,11 +54,6 @@ function Source(x, y) {
 	 */
 	this.moveAll = function() {
 		for (var elem = this.elems.first; elem != null; elem = elem.next) {
-			for (var i = 0; i < lines.length; i++)
-				if (elem.val.collidedBrute(lines[i])) {
-					elem.val.speed.x += (Math.random() * 10) - 5;
-					elem.val.speed.y += (Math.random() * -10) - 5;
-				}
 			elem.val.move();
 		}
 	};

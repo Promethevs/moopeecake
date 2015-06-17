@@ -34,6 +34,12 @@ function Ball(x, y) {
 	 * move ball by one iteration off speed vector
 	 */
 	this.move = function() {
+
+		for (var i = 0; i < lines.length; i++)
+			if (this.collidedBrute(lines[i])) {
+				this.reflect(lines[i]);
+			}
+
 		this.x += this.speed.x;
 		this.y += this.speed.y;
 	};
@@ -64,6 +70,17 @@ function Ball(x, y) {
 								* (line.y_start - line.y_end) + 12);
 
 	};
+
+	this.reflect = function(line) {
+
+		var x = this.speed.x;
+		var y = this.speed.y;
+		var cosa = cos(line, x, y);
+
+		this.speed.x = distancePoints(x , y) * cosa;
+		var sin = Math.sqrt(1 - cosa * cosa);
+		this.speed.y = distancePoints(x, y) * sin;
+	}
 
 	/**
 	 * draw a ball
