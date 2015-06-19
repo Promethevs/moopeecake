@@ -37,7 +37,7 @@ function Queue() {
 		if (this.empty()) {
 			return;
 
-		} else if (length == 1) {
+		} else if (this.length == 1) {
 			this.first == null;
 			this.last == null;
 
