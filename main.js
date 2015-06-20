@@ -164,6 +164,12 @@ function getRandomColor() {
 	return color;
 }
 
+function soundReflect() {
+  var audio = new Audio();
+  audio.src = 'sound.wav';
+  audio.play();
+}
+
 function distanceLine(l) {
 	return distanceCoords(l.getXEnd(), l.getYEnd(), l.getXStart(), l
 			.getYStart());

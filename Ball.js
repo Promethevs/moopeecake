@@ -84,6 +84,7 @@ function Ball(x, y) {
 
 	this.reflect = function(line) {
 
+	    soundReflect();
 		var xEnd = this.x;
 		var yEnd = this.y;
 
@@ -113,4 +114,5 @@ function Ball(x, y) {
 		ctx.fillStyle = this.color;
 		ctx.fill();
 	};
+	
 }
