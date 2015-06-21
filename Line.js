@@ -29,6 +29,8 @@ function Line(x_start, y_start, x_end, y_end) {
 	 * y coord of the end
 	 */
 	this.y_end = y_end;
+	
+	this.finished = false;
 
 	/**
 	 * getter for x_start

@@ -26,10 +26,6 @@ var limit = 450;
 /**
  * number of frames that have passed since start
  */
-var totalFrame = 0;
-/**
- * counter for frames
- */
 var frame = 20;
 /**
  * counter for updates
@@ -50,15 +46,9 @@ var ctx;
 function init() {
 	canvas = document.getElementById("main");
 	canvas.ondblclick = newSource;
-	canvas.onmousedown = function(e) {
-		l = new Line();
-		l.startDrawingCoords(e.pageX, e.pageY);
-	};
-	canvas.onmouseup = function(e) {
-		l.endDrawingCoords(e.pageX, e.pageY);
-		l.draw(ctx);
-		lines.push(l);
-	};
+	canvas.onmousedown = startLine;
+	canvas.onmousemove = editLine;
+	canvas.onmouseup = endLine;
 
 	if ((ctx = canvas.getContext("2d")) != null)
 		setInterval(main, 2);
@@ -77,7 +67,7 @@ function init() {
 function main() {
 
 	update();
-	if (updates >= 9) {
+	if (updates >= 8) {
 		updates = 0;
 		draw();
 	}
@@ -108,7 +98,6 @@ function update() {
 		// sources[i].spawnRand();
 
 	}
-	// ++totalFrame;
 	++frame;
 }
 
@@ -128,7 +117,7 @@ function draw() {
 	ctx.fillStyle = "black";
 	ctx.font = "14px serif";
 	// ctx.fillText(totalFrame, 10, 15);
-	ctx.fillText(frame, 10, 30);
+	// ctx.fillText(frame, 10, 30);
 
 	for (var i = 0; i < sources.length; i++) {
 		sources[i].draw();
@@ -147,7 +136,25 @@ function draw() {
  */
 function newSource(e) {
 	// console.log(e.pageX + "; " + e.pageY);
-	sources.push(new Source(e.pageX - 12, e.pageY - 12));
+	sources.push(new Source(e.pageX - this.offsetLeft - 6, e.pageY - this.offsetTop - 6));
+}
+
+function startLine(e) {
+	lines.push(new Line(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, e.pageX - this.offsetLeft, e.pageY - this.offsetTop));
+}
+
+function editLine(e) {
+	if (lines.length > 0) {
+		var peek = lines[lines.length-1];
+		if (peek!=undefined && !peek.finished)
+			peek.setEndCoords(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+	}
+}
+
+function endLine(e) {
+	if (lines.length > 0) {
+		lines[lines.length-1].finished = true;
+	}
 }
 
 /**
@@ -165,9 +172,9 @@ function getRandomColor() {
 }
 
 function soundReflect() {
-  var audio = new Audio();
-  audio.src = 'sound.wav';
-  audio.play();
+	var audio = new Audio();
+	audio.src = 'sound.wav';
+	audio.play();
 }
 
 function distanceLine(l) {

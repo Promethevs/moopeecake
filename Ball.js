@@ -51,7 +51,7 @@ function Ball(x, y) {
 		this.speed.y += gravity;
 	};
 
-	this.collidedBrute = function(line) {
+/*	this.collidedBrute = function(line) {
 		return Math.sqrt((this.x - line.x_start) * (this.x - line.x_start)
 				+ (this.y - line.y_start) * (this.y - line.y_start))
 				+ Math.sqrt((this.x - line.x_end) * (this.x - line.x_end)
@@ -69,25 +69,37 @@ function Ball(x, y) {
 								+ (line.y_start - line.y_end)
 								* (line.y_start - line.y_end) + 12);
 
-	};
+	};*/
 
-	this.collidedBruteNotWorking = function(line) {
+	this.collidedBrute = function(line) {
 
-		var x1 = line.getXStart();
-		var y1 = line.getYStart();
+		var x1 = line.x_start;
+		var y1 = line.y_start;
+		var x2 = line.x_end;
+		var y2 = line.y_end;
+		var x3 = this.x;
+		var y3 = this.y;
+		var x4 = this.x + this.speed.x;
+		var y4 = this.y + this.speed.y;
+		var temp1 = ((y2 - y1) * (x3 - x1) - (x2 - x1) * (y3 - y1))
+				* ((y2 - y1) * (x4 - x1) - (x2 - x1) * (y4 - y1));
+		var temp2 = ((y4 - y3) * (x1 - x3) - (y1 - y3) * (x4 - x3))
+				* ((y4 - y3) * (x2 - x3) - (y2 - y3) * (x4 - x3));
+		if (temp1 < 0 && temp2 < 0)
+			return true;
+		else
+			return false;
 
-		var x2 = line.getXEnd();
-		var y2 = line.getYEnd();
-
-		return Math.abs((this.x - x1) / (x2 - x1) - (this.y - y1) / (y2 - y1)) == 0;
 	}
 
 	this.reflect = function(line) {
 
-	    soundReflect();
-		var lineGenAng = Math.atan2(line.getYEnd() - line.getYStart(),
-				line.getXEnd() - line.getXStart()) + Math.PI;
-		
+		soundReflect();
+		var lineGenAng = Math.atan2(line.getYEnd() - line.getYStart(), line
+				.getXEnd()
+				- line.getXStart())
+				+ Math.PI;
+
 		var speedGenAng = Math.atan2(this.speed.y, this.speed.x) + Math.PI;
 		var speedLineAng = speedGenAng - lineGenAng;
 
@@ -102,31 +114,23 @@ function Ball(x, y) {
 		this.speed.x = speedDist * Math.cos(resGenAng);
 		this.speed.y = speedDist * Math.sin(resGenAng);
 
-/*		ctx.beginPath();
-		ctx.moveTo(100, this.y);
-		ctx.lineTo(700, this.y);
-
-		ctx.moveTo(this.x, 50);
-		ctx.lineTo(this.x, 400);
-		ctx.stroke();
-		ctx.closePath();
-
-		ctx.beginPath();
-		ctx.arc(this.x, this.y, 20, 0, lineGenAng, true);
-		ctx.stroke();
-		ctx.closePath();
-
-		ctx.beginPath();
-		ctx.arc(this.x, this.y, 40, 0, speedGenAng, true);
-		ctx.stroke();
-		ctx.closePath();
-
-		ctx.beginPath();
-		ctx.arc(this.x, this.y, 60, 0, resGenAng, true);
-		ctx.stroke();
-		ctx.closePath();
-
-		var finished;*/
+		/*
+		 * ctx.beginPath(); ctx.moveTo(100, this.y); ctx.lineTo(700, this.y);
+		 * 
+		 * ctx.moveTo(this.x, 50); ctx.lineTo(this.x, 400); ctx.stroke();
+		 * ctx.closePath();
+		 * 
+		 * ctx.beginPath(); ctx.arc(this.x, this.y, 20, 0, lineGenAng, true);
+		 * ctx.stroke(); ctx.closePath();
+		 * 
+		 * ctx.beginPath(); ctx.arc(this.x, this.y, 40, 0, speedGenAng, true);
+		 * ctx.stroke(); ctx.closePath();
+		 * 
+		 * ctx.beginPath(); ctx.arc(this.x, this.y, 60, 0, resGenAng, true);
+		 * ctx.stroke(); ctx.closePath();
+		 * 
+		 * var finished;
+		 */
 
 	}
 
@@ -140,5 +144,5 @@ function Ball(x, y) {
 		ctx.fillStyle = this.color;
 		ctx.fill();
 	};
-	
+
 }
