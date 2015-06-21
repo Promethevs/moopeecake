@@ -84,6 +84,7 @@ function Ball(x, y) {
 
 	this.reflect = function(line) {
 
+	    soundReflect();
 		var lineGenAng = Math.atan2(line.getYEnd() - line.getYStart(),
 				line.getXEnd() - line.getXStart()) + Math.PI;
 		
@@ -139,4 +140,5 @@ function Ball(x, y) {
 		ctx.fillStyle = this.color;
 		ctx.fill();
 	};
+	
 }
