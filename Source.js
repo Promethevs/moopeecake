@@ -45,7 +45,7 @@ function Source(x, y) {
 	 */
 	this.moveOffScreen = function() {
 		var elem = this.elems.peek();
-		if (elem != undefined && elem.y >= limit + elem.radius)
+		if (elem != undefined && elem.y >= height + elem.radius)
 			this.elems.dequeue();
 	};
 

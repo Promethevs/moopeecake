@@ -102,10 +102,11 @@ function Line(x_start, y_start, x_end, y_end) {
 		// console.log("y0: "+this.getYStart());
 		// console.log("x1: "+this.getXEnd());
 		// console.log("y1: "+this.getYEnd());
-
+		
 		ctx.beginPath();
 		ctx.moveTo(this.getXStart(), this.getYStart());
 		ctx.lineTo(this.getXEnd(), this.getYEnd());
+		ctx.strokeStyle = "#000";
 		ctx.stroke();
 		ctx.closePath();
 	};

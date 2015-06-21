@@ -51,25 +51,21 @@ function Ball(x, y) {
 		this.speed.y += gravity;
 	};
 
-/*	this.collidedBrute = function(line) {
-		return Math.sqrt((this.x - line.x_start) * (this.x - line.x_start)
-				+ (this.y - line.y_start) * (this.y - line.y_start))
-				+ Math.sqrt((this.x - line.x_end) * (this.x - line.x_end)
-						+ (this.y - line.y_end) * (this.y - line.y_end)) >= Math
-				.sqrt((line.x_start - line.x_end) * (line.x_start - line.x_end)
-						+ (line.y_start - line.y_end)
-						* (line.y_start - line.y_end) - 12)
-				&& Math.sqrt((this.x - line.x_start) * (this.x - line.x_start)
-						+ (this.y - line.y_start) * (this.y - line.y_start))
-						+ Math.sqrt((this.x - line.x_end)
-								* (this.x - line.x_end) + (this.y - line.y_end)
-								* (this.y - line.y_end)) <= Math
-						.sqrt((line.x_start - line.x_end)
-								* (line.x_start - line.x_end)
-								+ (line.y_start - line.y_end)
-								* (line.y_start - line.y_end) + 12);
-
-	};*/
+	/*
+	 * this.collidedBrute = function(line) { return Math.sqrt((this.x -
+	 * line.x_start) * (this.x - line.x_start) + (this.y - line.y_start) *
+	 * (this.y - line.y_start)) + Math.sqrt((this.x - line.x_end) * (this.x -
+	 * line.x_end) + (this.y - line.y_end) * (this.y - line.y_end)) >= Math
+	 * .sqrt((line.x_start - line.x_end) * (line.x_start - line.x_end) +
+	 * (line.y_start - line.y_end) (line.y_start - line.y_end) - 12) &&
+	 * Math.sqrt((this.x - line.x_start) * (this.x - line.x_start) + (this.y -
+	 * line.y_start) * (this.y - line.y_start)) + Math.sqrt((this.x -
+	 * line.x_end) (this.x - line.x_end) + (this.y - line.y_end) (this.y -
+	 * line.y_end)) <= Math .sqrt((line.x_start - line.x_end) (line.x_start -
+	 * line.x_end) + (line.y_start - line.y_end) (line.y_start - line.y_end) +
+	 * 12);
+	 *  };
+	 */
 
 	this.collidedBrute = function(line) {
 
@@ -114,23 +110,8 @@ function Ball(x, y) {
 		this.speed.x = speedDist * Math.cos(resGenAng);
 		this.speed.y = speedDist * Math.sin(resGenAng);
 
-		/*
-		 * ctx.beginPath(); ctx.moveTo(100, this.y); ctx.lineTo(700, this.y);
-		 * 
-		 * ctx.moveTo(this.x, 50); ctx.lineTo(this.x, 400); ctx.stroke();
-		 * ctx.closePath();
-		 * 
-		 * ctx.beginPath(); ctx.arc(this.x, this.y, 20, 0, lineGenAng, true);
-		 * ctx.stroke(); ctx.closePath();
-		 * 
-		 * ctx.beginPath(); ctx.arc(this.x, this.y, 40, 0, speedGenAng, true);
-		 * ctx.stroke(); ctx.closePath();
-		 * 
-		 * ctx.beginPath(); ctx.arc(this.x, this.y, 60, 0, resGenAng, true);
-		 * ctx.stroke(); ctx.closePath();
-		 * 
-		 * var finished;
-		 */
+		animations.enqueue(new Animation(this.x, this.y, speedDist * 5,
+				this.color));
 
 	}
 
@@ -143,6 +124,8 @@ function Ball(x, y) {
 		ctx.closePath();
 		ctx.fillStyle = this.color;
 		ctx.fill();
+		ctx.strokeStyle = "#fff";
+		ctx.stroke();
 	};
 
 }

@@ -11,18 +11,16 @@ var sources = [];
  */
 var lines = [];
 /**
- * variable containing unfinished line.
- */
-var l;
-
-/**
  * gravity of all the balls;
  */
-var gravity = 0.02;
+
+var animations = new Queue();
+
+var gravity = 0.2;
 /**
- * Y coordinate at which a ball will be destroyed.
+ * 
  */
-var limit = 450;
+var freq = 33;
 /**
  * number of frames that have passed since start
  */
@@ -40,6 +38,14 @@ var canvas;
  */
 var ctx;
 
+var height;
+var width;
+
+var tutorial = true;
+var drawnSource = false;
+var drawnStart = false;
+var drawnEnd = false;
+
 /**
  * initializes global variables & functions, starts the animation
  */
@@ -49,12 +55,13 @@ function init() {
 	canvas.onmousedown = startLine;
 	canvas.onmousemove = editLine;
 	canvas.onmouseup = endLine;
+	window.onresize = resize;
 
-	if ((ctx = canvas.getContext("2d")) != null)
-		setInterval(main, 2);
-	else
+	if ((ctx = canvas.getContext("2d")) != null) {
+		resize();
+		requestAnimationFrame(main);
+	} else
 		$(document).append("<p>looks like something went wrong in js:(</p>");
-
 }
 
 /**
@@ -67,11 +74,9 @@ function init() {
 function main() {
 
 	update();
-	if (updates >= 8) {
-		updates = 0;
-		draw();
-	}
-	++updates;
+	draw();
+
+	window.requestAnimationFrame(main);
 }
 
 /**
@@ -91,7 +96,7 @@ function update() {
 		sources[i].gravityOnAll();
 	}
 
-	if (frame >= 400) {
+	if (frame >= 60) {
 		frame = 0;
 		for (var i = 0; i < sources.length; i++)
 			sources[i].spawnNew();
@@ -112,12 +117,11 @@ function update() {
 function draw() {
 
 	ctx.fillStyle = "white";
-	ctx.fillRect(0, 0, 800, 450);
+	ctx.fillRect(0, 0, width, height);
 
-	ctx.fillStyle = "black";
-	ctx.font = "14px serif";
-	// ctx.fillText(totalFrame, 10, 15);
-	// ctx.fillText(frame, 10, 30);
+	for (var elem = animations.first; elem != null; elem = elem.next) {
+		elem.val.draw();
+	}
 
 	for (var i = 0; i < sources.length; i++) {
 		sources[i].draw();
@@ -125,6 +129,10 @@ function draw() {
 	}
 	for (var i = 0; i < lines.length; i++) {
 		lines[i].draw();
+	}
+
+	if (tutorial) {
+		drawTutorial();
 	}
 }
 
@@ -135,26 +143,57 @@ function draw() {
  *            double click event
  */
 function newSource(e) {
-	// console.log(e.pageX + "; " + e.pageY);
-	sources.push(new Source(e.pageX - this.offsetLeft - 6, e.pageY - this.offsetTop - 6));
+	sources.push(new Source(e.pageX - this.offsetLeft - 6, e.pageY
+			- this.offsetTop - 6));
+	drawnSource = true;
 }
 
 function startLine(e) {
-	lines.push(new Line(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, e.pageX - this.offsetLeft, e.pageY - this.offsetTop));
+	lines.push(new Line(e.pageX - this.offsetLeft, e.pageY - this.offsetTop,
+			e.pageX - this.offsetLeft, e.pageY - this.offsetTop));
 }
 
 function editLine(e) {
 	if (lines.length > 0) {
-		var peek = lines[lines.length-1];
-		if (peek!=undefined && !peek.finished)
-			peek.setEndCoords(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+		var peek = lines[lines.length - 1];
+		if (peek != undefined && !peek.finished)
+			peek.setEndCoords(e.pageX - this.offsetLeft, e.pageY
+					- this.offsetTop);
+		if (distanceLine(peek) > 0)
+			drawnStart = true;
 	}
 }
 
 function endLine(e) {
 	if (lines.length > 0) {
-		lines[lines.length-1].finished = true;
+		lines[lines.length - 1].finished = true;
+		if (distanceLine(lines[lines.length - 1]) > 0) {
+			drawnEnd = true;
+		}
 	}
+}
+
+function resize() {
+	width = window.innerWidth * 0.99;
+	height = window.innerHeight * 0.98;
+
+	ctx.canvas.width = width;
+	ctx.canvas.height = height;
+}
+
+function drawTutorial() {
+	ctx.font = "20px Arial";
+	ctx.fillStyle = "#555";
+
+	if (!drawnSource)
+		ctx.fillText("Doubleclick anywhere to place a Source.", 70, 70);
+	else if (!drawnStart)
+		ctx.fillText("Hold down and move the mouse to start drawing a line.",
+				70, 70);
+	else if (!drawnEnd)
+		ctx.fillText("Release to end drawing.", 70, 70);
+	else
+		ctx.fillText("Enjoy!", 70, 70);
 }
 
 /**
@@ -177,9 +216,9 @@ function soundReflect() {
 	audio.play();
 }
 
-function distanceLine(l) {
-	return distanceCoords(l.getXEnd(), l.getYEnd(), l.getXStart(), l
-			.getYStart());
+function distanceLine(line) {
+	return distanceCoords(line.getXEnd(), line.getYEnd(), line.getXStart(),
+			line.getYStart());
 }
 
 function distanceCoords(x1, y1, x2, y2) {
@@ -188,20 +227,4 @@ function distanceCoords(x1, y1, x2, y2) {
 
 function distanceVect(x, y) {
 	return Math.sqrt(x * x + y * y);
-}
-
-function dot(l1, l2) {
-
-	var x1 = l1.getXEnd() - l1.getXStart();
-	var y1 = l1.getYEnd() - l1.getYStart();
-
-	var x2 = l2.getXEnd() - l2.getXStart();
-	var y2 = l2.getYEnd() - l2.getYStart();
-
-	var res = x1 * x2 + y1 * y2;
-	return res;
-}
-
-function cos(l1, l2) {
-	return dot(l1, l2) / (distanceLine(l1) * distanceLine(l2));
 }
