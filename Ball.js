@@ -84,22 +84,48 @@ function Ball(x, y) {
 
 	this.reflect = function(line) {
 
-		var xEnd = this.x;
-		var yEnd = this.y;
+		var lineGenAng = Math.atan2(line.getYEnd() - line.getYStart(),
+				line.getXEnd() - line.getXStart()) + Math.PI;
+		
+		var speedGenAng = Math.atan2(this.speed.y, this.speed.x) + Math.PI;
+		var speedLineAng = speedGenAng - lineGenAng;
 
-		var xStart = this.x - this.speed.x;
-		var yStart = this.y - this.speed.y;
-
-		var vect = new Line(xStart, yStart, xEnd, yEnd);
-
-		var cosa = cos(line, vect);
-
-		this.speed.x = distanceLine(vect) * cosa;
-		var sina = Math.sqrt(1 - cosa * cosa);
-		if (this.speed.y > 0)
-			this.speed.y = -1 * distanceLine(vect) * sina;
+		var resLineAng;
+		if (speedLineAng < Math.PI)
+			resLineAng = Math.PI - speedLineAng;
 		else
-			this.speed.y = distanceLine(vect) * sina;
+			resLineAng = 3 * Math.PI - speedLineAng;
+		var resGenAng = resLineAng + lineGenAng;
+
+		var speedDist = distanceVect(this.speed.x, this.speed.y)
+		this.speed.x = speedDist * Math.cos(resGenAng);
+		this.speed.y = speedDist * Math.sin(resGenAng);
+
+/*		ctx.beginPath();
+		ctx.moveTo(100, this.y);
+		ctx.lineTo(700, this.y);
+
+		ctx.moveTo(this.x, 50);
+		ctx.lineTo(this.x, 400);
+		ctx.stroke();
+		ctx.closePath();
+
+		ctx.beginPath();
+		ctx.arc(this.x, this.y, 20, 0, lineGenAng, true);
+		ctx.stroke();
+		ctx.closePath();
+
+		ctx.beginPath();
+		ctx.arc(this.x, this.y, 40, 0, speedGenAng, true);
+		ctx.stroke();
+		ctx.closePath();
+
+		ctx.beginPath();
+		ctx.arc(this.x, this.y, 60, 0, resGenAng, true);
+		ctx.stroke();
+		ctx.closePath();
+
+		var finished;*/
 
 	}
 

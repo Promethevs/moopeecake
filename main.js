@@ -77,7 +77,7 @@ function init() {
 function main() {
 
 	update();
-	if (updates >= 7) {
+	if (updates >= 9) {
 		updates = 0;
 		draw();
 	}
@@ -101,14 +101,14 @@ function update() {
 		sources[i].gravityOnAll();
 	}
 
-	if (frame >= 200) {
+	if (frame >= 400) {
 		frame = 0;
 		for (var i = 0; i < sources.length; i++)
 			sources[i].spawnNew();
 		// sources[i].spawnRand();
 
 	}
-	//++totalFrame;
+	// ++totalFrame;
 	++frame;
 }
 
@@ -125,10 +125,10 @@ function draw() {
 	ctx.fillStyle = "white";
 	ctx.fillRect(0, 0, 800, 450);
 
-	// ctx.fillStyle = "black";
-	// ctx.font = "14px serif";
+	ctx.fillStyle = "black";
+	ctx.font = "14px serif";
 	// ctx.fillText(totalFrame, 10, 15);
-	// ctx.fillText(frame, 10, 30);
+	ctx.fillText(frame, 10, 30);
 
 	for (var i = 0; i < sources.length; i++) {
 		sources[i].draw();
@@ -170,7 +170,11 @@ function distanceLine(l) {
 }
 
 function distanceCoords(x1, y1, x2, y2) {
-	return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+	return distanceVect(x1 - x2, y1 - y2);
+}
+
+function distanceVect(x, y) {
+	return Math.sqrt(x * x + y * y);
 }
 
 function dot(l1, l2) {
