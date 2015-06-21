@@ -210,9 +210,9 @@ function getRandomColor() {
 	return color;
 }
 
-function soundReflect() {
+function soundReflect(angle) {
 	var audio = new Audio();
-	audio.src = 'sound.wav';
+	audio.src = "sound/" + Math.floor(angle / (Math.PI / 6)) + ".wav";
 	audio.play();
 }
 

@@ -112,6 +112,7 @@ function Ball(x, y) {
 
 		animations.enqueue(new Animation(this.x, this.y, speedDist * 5,
 				this.color));
+		soundReflect(speedLineAng);
 
 	}
 
