@@ -37,7 +37,7 @@ function Animation(x, y, maxRadius, color) {
 		if(this.radiusSmall<this.maxRadius+10)
 			this.radiusSmall += 3;
 		else{
-			animations.dequeue;
+			animations.dequeue();
 			return;
 		}
 		
