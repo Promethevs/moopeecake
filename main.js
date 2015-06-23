@@ -41,28 +41,19 @@ var ctx;
 var height;
 var width;
 
-var editingSource;
-var editingLine;
-var editingPoint;
-
-var tutorial = true;
-var drawnSource = false;
-var drawnStart = false;
-var drawnEnd = false;
-
 /**
  * initializes global variables & functions, starts the animation
  */
 function init() {
 	canvas = document.getElementById("main");
-	canvas.ondblclick = dblClick;
-	canvas.onmousedown = mousePressed;
-	canvas.onmousemove = mouseMoved;
-	canvas.onmouseup = mouseReleased;
-	window.onresize = resize;
+	canvas.ondblclick = Controls.dblClick;
+	canvas.onmousedown = Controls.mousePressed;
+	canvas.onmousemove = Controls.mouseMoved;
+	canvas.onmouseup = Controls.mouseReleased;
+	window.onresize = Controls.resize;
 
 	if ((ctx = canvas.getContext("2d")) != null) {
-		resize();
+		Controls.resize();
 		requestAnimationFrame(main);
 	} else
 		$(document).append("<p>looks like something went wrong in js:(</p>");
@@ -97,7 +88,6 @@ function update() {
 	for (var i = 0; i < sources.length; i++) {
 		sources[i].moveOffScreen();
 		sources[i].moveAll();
-		sources[i].gravityOnAll();
 	}
 
 	if (frame >= 60) {
@@ -134,175 +124,7 @@ function draw() {
 		lines[i].draw();
 	}
 
-	if (tutorial) {
-		drawTutorial();
-	}
-}
-
-/**
- * makes new Source
- * 
- * @param e -
- *            double click event
- */
-
-function dblClick(e) {
-
-	for (var i = 0; i < sources.length; i++)
-		if (distanceCoords(sources[i].x, sources[i].y, e.pageX
-				- this.offsetLeft, e.pageY - this.offsetTop) <= 12) {
-			deleteSource(i);
-			return null;
-		}
-	for (var i = 0; i < lines.length; i++)
-		if (distanceCoords(lines[i].x_start, lines[i].y_start, e.pageX
-				- this.offsetLeft, e.pageY - this.offsetTop) <= 12
-				|| distanceCoords(lines[i].x_end, lines[i].y_end, e.pageX
-						- this.offsetLeft, e.pageY - this.offsetTop) <= 12) {
-			deleteLines(i);
-			return null;
-		}
-	
-	newSource(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-}
-
-function newSource(x, y) {
-	sources.push(new Source(x - 4, y - 4));
-	drawnSource = true;
-}
-
-function deleteSource(num) {
-	sources[num] = sources[sources.length - 1];
-	sources.pop();
-}
-
-function deleteLines(num) {
-	lines[num] = lines[lines.length - 1];
-	lines.pop();
-}
-
-function mousePressed(e) {
-	for (var i = 0; i < sources.length; i++)
-		if (sources[i].editing === true) {
-			editingSource = i;
-			return;
-		}
-
-	for (var i = 0; i < lines.length; i++)
-		if (lines[i].editing === true) {
-			editingLine = i;
-			return;
-		}
-	
-	newLine(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-}
-
-function newLine(x, y) {
-	var line = new Line(x, y, x, y);
-	line.editing = true;
-
-	editingPoint = 1;
-	lines.push(line);
-	editingLine = lines.length - 1;
-}
-
-function mouseMoved(e) {
-	if (editingLine != undefined) {
-		editLine(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-		return;
-	} else if (editingSource != undefined) {
-		editSource(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
-		return;
-	}
-
-	for (var i = 0; i < sources.length; i++)
-		if (distanceCoords(sources[i].x, sources[i].y, e.pageX
-				- this.offsetLeft, e.pageY - this.offsetTop) <= 12) {
-			sources[i].editing = true;
-		} else
-			sources[i].editing = false;
-
-	for (var i = 0; i < lines.length; i++)
-		if (distanceCoords(lines[i].x_start, lines[i].y_start, e.pageX
-				- this.offsetLeft, e.pageY - this.offsetTop) <= 12) {
-			editingPoint = 0;
-			lines[i].editing = true;
-		} else if (distanceCoords(lines[i].x_end, lines[i].y_end, e.pageX
-				- this.offsetLeft, e.pageY - this.offsetTop) <= 12) {
-			editingPoint = 1;
-			lines[i].editing = true;
-		} else
-			lines[i].editing = false;
-}
-
-function editSource(x, y) {
-	if (editingSource != undefined) {
-		sources[editingSource].x = x;
-		sources[editingSource].y = y;
-	}
-}
-
-function editLine(x, y) {
-	if (editingLine != undefined) {
-		if (editingPoint == 0)
-			lines[editingLine].setStartCoords(x, y);
-		else if (editingPoint == 1)
-			lines[editingLine].setEndCoords(x, y);
-		drawnStart = true;
-	}
-}
-
-function mouseReleased() {
-	if(lines[lines.length-1].empty()){
-		lines.pop();
-		editingLine = undefined;
-	}
-	
-	if (editingLine != undefined)
-		endLine();
-	else if (editingSource != undefined)
-		endSource();
-}
-
-function endLine() {
-	if (editingLine != undefined) {
-
-		lines[editingLine].editing = false;
-		drawnEnd = true;
-		editingLine = undefined;
-		editingPoint = undefined;
-	}
-}
-
-function endSource() {
-	if (editingSource != undefined) {
-
-		sources[editingSource].editing = false;
-		editingSource = undefined;
-	}
-}
-
-function resize() {
-	width = window.innerWidth - 32;
-	height = window.innerHeight - 48;
-
-	ctx.canvas.width = width;
-	ctx.canvas.height = height;
-}
-
-function drawTutorial() {
-	ctx.font = "20px Arial";
-	ctx.fillStyle = "#555";
-
-	if (!drawnSource)
-		ctx.fillText("Doubleclick anywhere to place a Source.", 70, 70);
-	else if (!drawnStart)
-		ctx.fillText("Hold down and move the mouse to start drawing a line.",
-				70, 70);
-	else if (!drawnEnd)
-		ctx.fillText("Release to end drawing.", 70, 70);
-	else
-		ctx.fillText("Enjoy!", 70, 70);
+	Tutorial.draw();
 }
 
 /**
@@ -336,4 +158,87 @@ function distanceCoords(x1, y1, x2, y2) {
 
 function distanceVect(x, y) {
 	return Math.sqrt(x * x + y * y);
+}
+
+var dblClick = function(e) {
+
+	for (var i = 0; i < sources.length; i++)
+		if (distanceCoords(sources[i].x, sources[i].y, e.pageX
+				- controls.offsetLeft, e.pageY - controls.offsetTop) <= 12) {
+			controls.deleteSource(i);
+			tutorial.deletedElem();
+			return null;
+		}
+	for (var i = 0; i < lines.length; i++)
+		if (distanceCoords(lines[i].x_start, lines[i].y_start, e.pageX
+				- controls.offsetLeft, e.pageY - controls.offsetTop) <= 12
+				|| distanceCoords(lines[i].x_end, lines[i].y_end, e.pageX
+						- controls.offsetLeft, e.pageY - controls.offsetTop) <= 12) {
+			controls.deleteLines(i);
+			tutorial.deletedElem();
+			return null;
+		}
+
+	controls.newSource(e.pageX - controls.offsetLeft, e.pageY
+			- controls.offsetTop);
+}
+
+var mousePressed = function(e) {
+	for (var i = 0; i < sources.length; i++)
+		if (sources[i].editing === true) {
+			controls.editingSource = i;
+			return;
+		}
+
+	for (var i = 0; i < lines.length; i++)
+		if (lines[i].editing === true) {
+			controls.editingLine = i;
+			return;
+		}
+
+	controls.newLine(e.pageX - controls.offsetLeft, e.pageY
+			- controls.offsetTop);
+}
+
+var mouseMoved = function(e) {
+	if (controls.editingLine != undefined) {
+		controls.editLine(e.pageX - controls.offsetLeft, e.pageY
+				- controls.offsetTop);
+		return;
+	} else if (controls.editingSource != undefined) {
+		controls.editSource(e.pageX - controls.offsetLeft, e.pageY
+				- controls.offsetTop);
+		return;
+	}
+
+	for (var i = 0; i < sources.length; i++)
+		if (distanceCoords(sources[i].x, sources[i].y, e.pageX
+				- controls.offsetLeft, e.pageY - controls.offsetTop) <= 12) {
+			sources[i].editing = true;
+		} else
+			sources[i].editing = false;
+
+	for (var i = 0; i < lines.length; i++)
+		if (distanceCoords(lines[i].x_start, lines[i].y_start, e.pageX
+				- controls.offsetLeft, e.pageY - controls.offsetTop) <= 12) {
+			controls.editingPoint = 0;
+			lines[i].editing = true;
+		} else if (distanceCoords(lines[i].x_end, lines[i].y_end, e.pageX
+				- controls.offsetLeft, e.pageY - controls.offsetTop) <= 12) {
+			controls.editingPoint = 1;
+			lines[i].editing = true;
+		} else
+			lines[i].editing = false;
+}
+
+var mouseReleased = function(e) {
+	if (lines[lines.length - 1].empty()) {
+		lines.pop();
+		controls.editingLine = undefined;
+	}
+
+	if (controls.editingLine != undefined)
+		controls.endLine();
+	else if (controls.editingSource != undefined)
+		controls.endSource();
 }

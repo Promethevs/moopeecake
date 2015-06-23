@@ -109,10 +109,10 @@ function Line(x_start, y_start, x_end, y_end) {
 		ctx.closePath();
 
 		if (this.editing === true && distanceLine(this) > 0)
-			if (editingPoint == 0) {
+			if (Controls.editingPoint == 0) {
 				ctx.fillStyle = "black";
 				ctx.fillRect(this.getXStart() - 3, this.getYStart() - 3, 6, 6);
-			} else if (editingPoint == 1) {
+			} else if (Controls.editingPoint == 1) {
 				ctx.fillStyle = "black";
 				ctx.fillRect(this.getXEnd() - 3, this.getYEnd() - 3, 6, 6);
 			}
