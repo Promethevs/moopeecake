@@ -88,6 +88,7 @@ function update() {
 	for (var i = 0; i < sources.length; i++) {
 		sources[i].moveOffScreen();
 		sources[i].moveAll();
+		sources[i].gravityOnAll();
 	}
 
 	if (frame >= 60) {
