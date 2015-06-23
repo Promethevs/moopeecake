@@ -113,10 +113,11 @@ function draw() {
 
 	ctx.fillStyle = "white";
 	ctx.fillRect(0, 0, width, height);
-	/*
-	 * for (var elem = animations.first; elem != null; elem = elem.next) {
-	 * elem.val.draw(); }
-	 */
+
+	for (var elem = animations.first; elem != null; elem = elem.next) {
+		elem.val.draw();
+	}
+
 	for (var i = 0; i < sources.length; i++) {
 		sources[i].draw();
 		sources[i].drawAllBalls();
@@ -159,87 +160,4 @@ function distanceCoords(x1, y1, x2, y2) {
 
 function distanceVect(x, y) {
 	return Math.sqrt(x * x + y * y);
-}
-
-var dblClick = function(e) {
-
-	for (var i = 0; i < sources.length; i++)
-		if (distanceCoords(sources[i].x, sources[i].y, e.pageX
-				- controls.offsetLeft, e.pageY - controls.offsetTop) <= 12) {
-			controls.deleteSource(i);
-			tutorial.deletedElem();
-			return null;
-		}
-	for (var i = 0; i < lines.length; i++)
-		if (distanceCoords(lines[i].x_start, lines[i].y_start, e.pageX
-				- controls.offsetLeft, e.pageY - controls.offsetTop) <= 12
-				|| distanceCoords(lines[i].x_end, lines[i].y_end, e.pageX
-						- controls.offsetLeft, e.pageY - controls.offsetTop) <= 12) {
-			controls.deleteLines(i);
-			tutorial.deletedElem();
-			return null;
-		}
-
-	controls.newSource(e.pageX - controls.offsetLeft, e.pageY
-			- controls.offsetTop);
-}
-
-var mousePressed = function(e) {
-	for (var i = 0; i < sources.length; i++)
-		if (sources[i].editing === true) {
-			controls.editingSource = i;
-			return;
-		}
-
-	for (var i = 0; i < lines.length; i++)
-		if (lines[i].editing === true) {
-			controls.editingLine = i;
-			return;
-		}
-
-	controls.newLine(e.pageX - controls.offsetLeft, e.pageY
-			- controls.offsetTop);
-}
-
-var mouseMoved = function(e) {
-	if (controls.editingLine != undefined) {
-		controls.editLine(e.pageX - controls.offsetLeft, e.pageY
-				- controls.offsetTop);
-		return;
-	} else if (controls.editingSource != undefined) {
-		controls.editSource(e.pageX - controls.offsetLeft, e.pageY
-				- controls.offsetTop);
-		return;
-	}
-
-	for (var i = 0; i < sources.length; i++)
-		if (distanceCoords(sources[i].x, sources[i].y, e.pageX
-				- controls.offsetLeft, e.pageY - controls.offsetTop) <= 12) {
-			sources[i].editing = true;
-		} else
-			sources[i].editing = false;
-
-	for (var i = 0; i < lines.length; i++)
-		if (distanceCoords(lines[i].x_start, lines[i].y_start, e.pageX
-				- controls.offsetLeft, e.pageY - controls.offsetTop) <= 12) {
-			controls.editingPoint = 0;
-			lines[i].editing = true;
-		} else if (distanceCoords(lines[i].x_end, lines[i].y_end, e.pageX
-				- controls.offsetLeft, e.pageY - controls.offsetTop) <= 12) {
-			controls.editingPoint = 1;
-			lines[i].editing = true;
-		} else
-			lines[i].editing = false;
-}
-
-var mouseReleased = function(e) {
-	if (lines[lines.length - 1].empty()) {
-		lines.pop();
-		controls.editingLine = undefined;
-	}
-
-	if (controls.editingLine != undefined)
-		controls.endLine();
-	else if (controls.editingSource != undefined)
-		controls.endSource();
 }
