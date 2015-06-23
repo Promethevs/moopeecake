@@ -29,8 +29,8 @@ function Line(x_start, y_start, x_end, y_end) {
 	 * y coord of the end
 	 */
 	this.y_end = y_end;
-	
-	this.finished = false;
+
+	this.editing = false;
 
 	/**
 	 * getter for x_start
@@ -92,23 +92,30 @@ function Line(x_start, y_start, x_end, y_end) {
 		this.setEndCoords(x, y);
 	};
 
+	this.empty = function(){
+		return this.x_start == this.x_end && this.y_start == this.y_end;
+	};
+	
 	/**
 	 * draw a line
 	 */
 	this.draw = function() {
-		// console.log("Drawing begin");
 
-		// console.log("x0: "+this.getXStart());
-		// console.log("y0: "+this.getYStart());
-		// console.log("x1: "+this.getXEnd());
-		// console.log("y1: "+this.getYEnd());
-		
 		ctx.beginPath();
 		ctx.moveTo(this.getXStart(), this.getYStart());
 		ctx.lineTo(this.getXEnd(), this.getYEnd());
 		ctx.strokeStyle = "#000";
 		ctx.stroke();
 		ctx.closePath();
+
+		if (this.editing === true && distanceLine(this) > 0)
+			if (editingPoint == 0) {
+				ctx.fillStyle = "black";
+				ctx.fillRect(this.getXStart() - 3, this.getYStart() - 3, 6, 6);
+			} else if (editingPoint == 1) {
+				ctx.fillStyle = "black";
+				ctx.fillRect(this.getXEnd() - 3, this.getYEnd() - 3, 6, 6);
+			}
 	};
 
 };

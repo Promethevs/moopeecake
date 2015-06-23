@@ -41,6 +41,10 @@ var ctx;
 var height;
 var width;
 
+var editingSource;
+var editingLine;
+var editingPoint;
+
 var tutorial = true;
 var drawnSource = false;
 var drawnStart = false;
@@ -51,10 +55,10 @@ var drawnEnd = false;
  */
 function init() {
 	canvas = document.getElementById("main");
-	canvas.ondblclick = newSource;
-	canvas.onmousedown = startLine;
-	canvas.onmousemove = editLine;
-	canvas.onmouseup = endLine;
+	canvas.ondblclick = dblClick;
+	canvas.onmousedown = mousePressed;
+	canvas.onmousemove = mouseMoved;
+	canvas.onmouseup = mouseReleased;
 	window.onresize = resize;
 
 	if ((ctx = canvas.getContext("2d")) != null) {
@@ -118,11 +122,10 @@ function draw() {
 
 	ctx.fillStyle = "white";
 	ctx.fillRect(0, 0, width, height);
-
-	for (var elem = animations.first; elem != null; elem = elem.next) {
-		elem.val.draw();
-	}
-
+	/*
+	 * for (var elem = animations.first; elem != null; elem = elem.next) {
+	 * elem.val.draw(); }
+	 */
 	for (var i = 0; i < sources.length; i++) {
 		sources[i].draw();
 		sources[i].drawAllBalls();
@@ -142,40 +145,146 @@ function draw() {
  * @param e -
  *            double click event
  */
-function newSource(e) {
-	sources.push(new Source(e.pageX - this.offsetLeft - 6, e.pageY
-			- this.offsetTop - 6));
+
+function dblClick(e) {
+
+	for (var i = 0; i < sources.length; i++)
+		if (distanceCoords(sources[i].x, sources[i].y, e.pageX
+				- this.offsetLeft, e.pageY - this.offsetTop) <= 12) {
+			deleteSource(i);
+			return null;
+		}
+	for (var i = 0; i < lines.length; i++)
+		if (distanceCoords(lines[i].x_start, lines[i].y_start, e.pageX
+				- this.offsetLeft, e.pageY - this.offsetTop) <= 12
+				|| distanceCoords(lines[i].x_end, lines[i].y_end, e.pageX
+						- this.offsetLeft, e.pageY - this.offsetTop) <= 12) {
+			deleteLines(i);
+			return null;
+		}
+	
+	newSource(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+}
+
+function newSource(x, y) {
+	sources.push(new Source(x - 4, y - 4));
 	drawnSource = true;
 }
 
-function startLine(e) {
-	lines.push(new Line(e.pageX - this.offsetLeft, e.pageY - this.offsetTop,
-			e.pageX - this.offsetLeft, e.pageY - this.offsetTop));
+function deleteSource(num) {
+	sources[num] = sources[sources.length - 1];
+	sources.pop();
 }
 
-function editLine(e) {
-	if (lines.length > 0) {
-		var peek = lines[lines.length - 1];
-		if (peek != undefined && !peek.finished)
-			peek.setEndCoords(e.pageX - this.offsetLeft, e.pageY
-					- this.offsetTop);
-		if (distanceLine(peek) > 0)
-			drawnStart = true;
+function deleteLines(num) {
+	lines[num] = lines[lines.length - 1];
+	lines.pop();
+}
+
+function mousePressed(e) {
+	for (var i = 0; i < sources.length; i++)
+		if (sources[i].editing === true) {
+			editingSource = i;
+			return;
+		}
+
+	for (var i = 0; i < lines.length; i++)
+		if (lines[i].editing === true) {
+			editingLine = i;
+			return;
+		}
+	
+	newLine(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+}
+
+function newLine(x, y) {
+	var line = new Line(x, y, x, y);
+	line.editing = true;
+
+	editingPoint = 1;
+	lines.push(line);
+	editingLine = lines.length - 1;
+}
+
+function mouseMoved(e) {
+	if (editingLine != undefined) {
+		editLine(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+		return;
+	} else if (editingSource != undefined) {
+		editSource(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+		return;
+	}
+
+	for (var i = 0; i < sources.length; i++)
+		if (distanceCoords(sources[i].x, sources[i].y, e.pageX
+				- this.offsetLeft, e.pageY - this.offsetTop) <= 12) {
+			sources[i].editing = true;
+		} else
+			sources[i].editing = false;
+
+	for (var i = 0; i < lines.length; i++)
+		if (distanceCoords(lines[i].x_start, lines[i].y_start, e.pageX
+				- this.offsetLeft, e.pageY - this.offsetTop) <= 12) {
+			editingPoint = 0;
+			lines[i].editing = true;
+		} else if (distanceCoords(lines[i].x_end, lines[i].y_end, e.pageX
+				- this.offsetLeft, e.pageY - this.offsetTop) <= 12) {
+			editingPoint = 1;
+			lines[i].editing = true;
+		} else
+			lines[i].editing = false;
+}
+
+function editSource(x, y) {
+	if (editingSource != undefined) {
+		sources[editingSource].x = x;
+		sources[editingSource].y = y;
 	}
 }
 
-function endLine(e) {
-	if (lines.length > 0) {
-		lines[lines.length - 1].finished = true;
-		if (distanceLine(lines[lines.length - 1]) > 0) {
-			drawnEnd = true;
-		}
+function editLine(x, y) {
+	if (editingLine != undefined) {
+		if (editingPoint == 0)
+			lines[editingLine].setStartCoords(x, y);
+		else if (editingPoint == 1)
+			lines[editingLine].setEndCoords(x, y);
+		drawnStart = true;
+	}
+}
+
+function mouseReleased() {
+	if(lines[lines.length-1].empty()){
+		lines.pop();
+		editingLine = undefined;
+	}
+	
+	if (editingLine != undefined)
+		endLine();
+	else if (editingSource != undefined)
+		endSource();
+}
+
+function endLine() {
+	if (editingLine != undefined) {
+
+		lines[editingLine].editing = false;
+		drawnEnd = true;
+		editingLine = undefined;
+		editingPoint = undefined;
+	}
+}
+
+function endSource() {
+	if (editingSource != undefined) {
+
+		sources[editingSource].editing = false;
+		editingSource = undefined;
 	}
 }
 
 function resize() {
-	width = window.innerWidth * 0.99;
-	height = window.innerHeight * 0.98;
+	width = window.innerWidth - 32;
+	height = window.innerHeight - 48;
 
 	ctx.canvas.width = width;
 	ctx.canvas.height = height;

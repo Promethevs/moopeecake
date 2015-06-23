@@ -25,6 +25,8 @@ function Source(x, y) {
 	 */
 	this.elems = new Queue();
 
+	this.editing = false;
+	
 	/**
 	 * spawn new ball
 	 */
@@ -71,8 +73,11 @@ function Source(x, y) {
 	 * draw the Source
 	 */
 	this.draw = function() {
+		var radius = 8;
+		if(this.editing===true)
+			radius = 10;
 		ctx.beginPath();
-		ctx.arc(this.x, this.y, 8, 0, Math.PI * 2, true);
+		ctx.arc(this.x, this.y, radius, 0, Math.PI * 2, true);
 		ctx.closePath();
 		ctx.strokeStyle = "black";
 		ctx.stroke();
