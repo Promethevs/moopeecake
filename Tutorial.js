@@ -53,6 +53,6 @@ var Tutorial = {
 		else if (!this.deleted)
 			ctx.fillText("Doubleclick it to delete.", 70, 70);
 		else
-			ctx.fillText("Enjoy! 😀", 70, 70);
+			ctx.fillText("Enjoy!", 70, 70);
 	}
 }
